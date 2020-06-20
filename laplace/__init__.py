@@ -1,6 +1,5 @@
 from sympy.abc import s,l
 from sympy import *
-import parser
 
 t = symbols('t', real=true, positive=true)
 s = symbols('s', real=true, positive=true)
