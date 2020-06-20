@@ -2,7 +2,6 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 from tp3.funciones import generar_senal_cuadrada
-from tp3.funciones import generar_seno
 from tp3.funciones import calcular_transformada
 from tp3.funciones import obtener_cantidad_de_muestras
 from tp3.funciones import obtener_amplitud
