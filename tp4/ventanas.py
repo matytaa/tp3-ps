@@ -9,13 +9,14 @@ from tp3.funciones import calcular_antitransformada
 
 
 def levantar_audio(file):
-    spf440 = wave.open(file, "r")
-    signal = spf440.readframes(-1)
+    spf = wave.open(file, "r")
+    signal = spf.readframes(-1)
+    samples = spf.getframerate()
     signal = np.fromstring(signal, "Int16")
-    if spf440.getnchannels() == 2:
+    if spf.getnchannels() == 2:
         print("Just mono files")
         sys.exit(0)
-    return signal
+    return signal, samples
 
 def calcular_transformada_sonido(a_signal):
     return calcular_transformada(a_signal)
@@ -23,9 +24,15 @@ def calcular_transformada_sonido(a_signal):
 def calcular_modulo(transform_signal):
     return np.abs(transform_signal)[0:int(len(transform_signal) / 2)] / (len(transform_signal) / 2)
 
-signal_440 = levantar_audio("audios/sen_440Hz_1s.wav")
-signal_500 = levantar_audio("audios/sen_500Hz_1s.wav")
-fs = 44100
+def frecuencia_de_muestreo(fs_signal, fs_another_signal):
+    if (fs_signal >= fs_another_signal):
+        return fs_signal
+    return fs_another_signal
+
+signal_440, fs_440 = levantar_audio("audios/sen_440Hz_1s.wav")
+signal_500, fs_550 = levantar_audio("audios/sen_500Hz_1s.wav")
+
+fs = frecuencia_de_muestreo(fs_440, fs_550)
 
 transform_signal_440 = calcular_transformada(signal_440)
 module_signal_440 = calcular_modulo(transform_signal_440)
