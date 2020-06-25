@@ -22,6 +22,10 @@ def calcular_transformada(x_t):
     X_w = scipy.fft.fft(x_t)
     return X_w
 
+def calcular_antitransformada(X_w):
+    X_t = scipy.fft.ifft(X_w)
+    return X_t
+
 def obtener_cantidad_de_muestras(precision, t_final, t_inicial):
     cantidad_muestras = (t_final - t_inicial) * precision
     return cantidad_muestras
