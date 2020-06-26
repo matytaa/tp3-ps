@@ -1,4 +1,4 @@
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plot
 import numpy as np
 import wave
 import sys
@@ -40,46 +40,50 @@ module_signal_440 = calcular_modulo(transform_signal_440)
 transform_signal_500 = calcular_transformada(signal_500)
 module_signal_500 = calcular_modulo(transform_signal_500)
 
-suma = transform_signal_440 + transform_signal_500
-suma_mod = module_signal_440 + module_signal_500
+suma_signals = transform_signal_440 + transform_signal_500
+modulo_suma_signals = module_signal_440 + module_signal_500
 
-anti_tf_suma = calcular_antitransformada(suma)
+anti_tf_suma_signals = calcular_antitransformada(suma_signals)
+f = np.linspace(0, fs, fs, endpoint=None)[0:int(len(suma_signals) / 2)]
+
+n = len(suma_signals)
 
 boxcar = signal.boxcar
+s_boxcar = anti_tf_suma_signals * boxcar(n)
+tf_boxcar = calcular_transformada(s_boxcar)
+modulo_boxcar = calcular_modulo(tf_boxcar)
+f_boxcar = np.linspace(0, fs, fs, endpoint=None)[0:int(len(tf_boxcar) / 2)]
+
 bartlett = signal.bartlett
+s_bartlett = anti_tf_suma_signals * bartlett(n)
+tf_bartlett = calcular_transformada(s_bartlett)
+modulo_bartlett = calcular_modulo(tf_bartlett)
+f_bartlett = np.linspace(0, fs, fs, endpoint=None)[0:int(len(tf_bartlett) / 2)]
+
 hamming = signal.hamming
+s_hamming = anti_tf_suma_signals * hamming(n)
+tf_hamming = calcular_transformada(s_hamming)
+modulo_hamming = calcular_modulo(tf_hamming)
+f_hamming = np.linspace(0, fs, fs, endpoint=None)[0:int(len(tf_hamming) / 2)]
 
-n = len(suma)
-boxcar = anti_tf_suma*boxcar(n)
-sbar = anti_tf_suma*bartlett(n)
-shamm = anti_tf_suma*hamming(n)
+figura, axes = plot.subplots(1, 4)
+axes[0].plot(f, modulo_suma_signals)
+axes[0].set_xlabel("f (Hz) - fourier")
 
-tf_boxcar = calcular_transformada(boxcar)
-mod_boxcar = calcular_modulo(tf_boxcar)
-f2 = np.linspace(0, fs, fs, endpoint=None)[0:int(len(tf_boxcar)/2)]
+axes[1].plot(f_boxcar, modulo_boxcar)
+axes[1].set_xlabel("f (Hz) - rectangular")
 
-tf_bar = calcular_transformada(sbar)
-mod_bar = calcular_modulo(tf_bar)
-f3 = np.linspace(0, fs, fs, endpoint=None)[0:int(len(tf_bar)/2)]
+axes[2].plot(f_bartlett, modulo_bartlett)
+axes[2].set_xlabel("f (Hz) - triangular")
 
+axes[3].plot(f_hamming, modulo_hamming)
+axes[3].set_xlabel("f (Hz) - hamming")
 
-tf_hamm = calcular_transformada(shamm)
-mod_hamm = calcular_modulo(tf_hamm)
-f4 = np.linspace(0, fs, fs, endpoint=None)[0:int(len(tf_hamm)/2)]
+plot.show()
 
+# Plot the spectrogram
+plot.specgram(suma_signals,Fs=fs)
+plot.xlabel("time")
+plot.ylabel('Frequency')
 
-f = np.linspace(0, fs, fs, endpoint=None)[0:int(len(suma) / 2)]
-
-fig2, axes2 = plt.subplots(1, 4)
-axes2[0].plot(f, suma_mod)
-axes2[0].set_xlabel("f (Hz) - fourier")
-
-axes2[1].plot(f2, mod_boxcar)
-axes2[1].set_xlabel("f (Hz) - rectangular")
-
-axes2[2].plot(f3, mod_bar)
-axes2[2].set_xlabel("f (Hz) - triangular")
-
-axes2[3].plot(f4, mod_hamm)
-axes2[3].set_xlabel("f (Hz) - hamming")
-plt.show()
+plot.show()
