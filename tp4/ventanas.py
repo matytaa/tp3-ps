@@ -7,7 +7,6 @@ from scipy import signal
 from tp3.funciones import calcular_transformada
 from tp3.funciones import calcular_antitransformada
 
-
 def levantar_audio(file):
     spf = wave.open(file, "r")
     signal = spf.readframes(-1)

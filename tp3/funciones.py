@@ -18,13 +18,13 @@ def generar_senal_cuadrada(T, t_inicial, t_final, fs):
 
     return eje_t, senal
 
-def calcular_transformada(x_t):
-    X_w = scipy.fft.fft(x_t)
-    return X_w
+def calcular_transformada(signal_domain_time):
+    signal_domain_frecuency = scipy.fft.fft(signal_domain_time)
+    return signal_domain_frecuency
 
-def calcular_antitransformada(X_w):
-    X_t = scipy.fft.ifft(X_w)
-    return X_t
+def calcular_antitransformada(signal_domain_frecuency):
+    signal_domain_time = scipy.fft.ifft(signal_domain_frecuency)
+    return signal_domain_time
 
 def obtener_cantidad_de_muestras(precision, t_final, t_inicial):
     cantidad_muestras = (t_final - t_inicial) * precision
