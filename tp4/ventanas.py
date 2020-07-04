@@ -29,9 +29,9 @@ def frecuencia_de_muestreo(fs_signal, fs_another_signal):
     return fs_another_signal
 
 signal_440, fs_440 = levantar_audio("audios/sen_440Hz_1s.wav")
-signal_500, fs_550 = levantar_audio("audios/sen_500Hz_1s.wav")
+signal_500, fs_500 = levantar_audio("audios/sen_500Hz_1s.wav")
 
-fs = frecuencia_de_muestreo(fs_440, fs_550)
+fs = frecuencia_de_muestreo(fs_440, fs_500)
 
 transform_signal_440 = calcular_transformada(signal_440)
 module_signal_440 = calcular_modulo(transform_signal_440)
@@ -81,7 +81,7 @@ axes[3].set_xlabel("f (Hz) - hamming")
 plot.show()
 
 # Plot the spectrogram
-plot.specgram(suma_signals,Fs=fs)
+plot.specgram(suma_signals, Fs=fs)
 plot.xlabel("time")
 plot.ylabel('Frequency')
 

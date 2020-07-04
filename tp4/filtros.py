@@ -1,6 +1,11 @@
-from scipy import signal
+from tp4.ventanas import levantar_audio
+from tp4.ventanas import frecuencia_de_muestreo
+from tp3.funciones import calcular_transformada
+from tp3.funciones import calcular_antitransformada
+import matplotlib.pyplot as plot
+import numpy as np
 
-def filtrar_pasa_bajos(senal, fs, frecuencia_de_corte):
+def filtro_pasa_bajos(senal, fs, frecuencia_de_corte):
     media = obtener_media(frecuencia_de_corte, fs, len(senal))
     tf_signal = calcular_transformada(senal)
     samples_signal_filter = []
@@ -32,10 +37,28 @@ def obtener_media(frecuencia_de_corte, fs, signal_size):
 def es_mayor_a_la_media(muestra, media):
     return muestra > media
 
-def calcular_transformada(signal_domain_time):
-    signal_domain_frecuency = signal.fft.fft(signal_domain_time)
-    return signal_domain_frecuency
+signal_440, fs_440 = levantar_audio("audios/sen_440Hz_1s.wav")
+signal_500, fs_500 = levantar_audio("audios/sen_500Hz_1s.wav")
 
-def calcular_antitransformada(signal_domain_frecuency):
-    signal_domain_time = signal.fft.ifft(signal_domain_frecuency)
-    return signal_domain_time
+fs = frecuencia_de_muestreo(fs_440, fs_500)
+
+transform_signal_440 = calcular_transformada(signal_440)
+transform_signal_500 = calcular_transformada(signal_500)
+
+suma_signals = transform_signal_440 + transform_signal_500
+
+anti_tf_suma_signals = calcular_antitransformada(suma_signals)
+f = np.linspace(0, fs, fs, endpoint=None)[0:int(len(suma_signals) / 2)]
+frecuencia_de_corte = 256
+filter_signal = filtro_pasa_bajos(anti_tf_suma_signals, fs, frecuencia_de_corte)
+
+
+eje_t = np.linspace(0, len(anti_tf_suma_signals), fs, endpoint=None)
+figura, axes = plot.subplots(1, 2)
+axes[0].plot(eje_t, anti_tf_suma_signals)
+axes[0].set_xlabel("t - original signal")
+
+eje_t = np.linspace(0, len(filter_signal), fs, endpoint=None)
+axes[1].plot(eje_t, filter_signal)
+axes[1].set_xlabel("t - filter signal")
+plot.show()
